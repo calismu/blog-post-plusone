@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+# keeping it for testing
 DEBUG = True
 
 # allowing any for testing purposes
@@ -16,10 +17,12 @@ SECRET_KEY = 'some insecure secret key'
 
 
 INSTALLED_APPS = [
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
     'api',
@@ -40,6 +43,23 @@ ROOT_URLCONF = 'oneplus.urls'
 
 WSGI_APPLICATION = 'oneplus.wsgi.application'
 
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
+
+STATIC_URL = 'static/'
 
 DATABASES = {
     'default': {
@@ -66,6 +86,9 @@ USE_I18N = True
 
 USE_TZ = True
 
+
+# use basic authentication for api calls
+# make sure all view a re authenticated
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
