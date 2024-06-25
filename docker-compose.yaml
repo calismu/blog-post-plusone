@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: always
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - blog-post-network
+  app:
+    image: blog-post:api
+    ports:
+      - '8000:8000'
+    depends_on:
+      - db
+    networks:
+      - blog-post-network
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+networks:
+  blog-post-network:
+
+volumes:
+  db-data:
