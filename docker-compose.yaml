@@ -27,6 +27,7 @@ services:
       DB_PORT: ${DB_PORT}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
+      APP_ENV: ${APP_ENV}
 
 networks:
   blog-post-network:
