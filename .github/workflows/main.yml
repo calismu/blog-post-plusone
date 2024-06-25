@@ -69,4 +69,7 @@ jobs:
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
           chmod 600 key.pem
-          ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@${{ vars.SSH_HOST }} 'docker run --rm --name somerunner ${{ vars.DOCKER_HUB_USERNAME }}/hello-oneplus:latest'
+          ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@${{ vars.SSH_HOST }} 'cd one-plus/blog-post-plusone;\
+          git pull;\
+          cd ..;\
+          sh up.sh;'
