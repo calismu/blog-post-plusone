@@ -4,6 +4,8 @@ import json
 from django.test import TestCase, Client
 from django.urls import reverse
 
+from .models import Category, Tag
+
 
 class TestUsers(TestCase):
 
@@ -62,7 +64,7 @@ class TestUsers(TestCase):
 
 
 class TestPosts(TestCase):
-	
+
 	def setUp(self):
 		self.client = Client()
 		self.register = reverse('user-registeration')
@@ -105,6 +107,9 @@ class TestPosts(TestCase):
 
 
 	def test_add_posts(self):
+		category = Category.objects.create(name='comedy')
+		tag = Tag.objects.create(name='mytag')
+
 		register_user_response = self.client.post(
 			self.register,
 			json.dumps({
@@ -124,8 +129,8 @@ class TestPosts(TestCase):
 			    "title": "my first post",
 			    "content": "my first post content",
 			    "author": 1,
-			    "tags": [],
-			    "categories": []
+			    "tags": [tag.id],
+			    "categories": [category.id]
 			}),
 			headers={
 				'Authorization': f'Basic {base64.b64encode(b"omar:omarpass").decode("utf-8")}'
