@@ -26,7 +26,14 @@ jobs:
           python -m pip install -r ../requirements.txt
           python -m coverage run manage.py test
           python -m coverage report
-  
+          python -m coverage html
+      -
+        name: Upload coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: coverage.html
+
   build:
     runs-on: ubuntu-latest
     needs: test

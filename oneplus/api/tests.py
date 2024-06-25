@@ -150,10 +150,11 @@ class TestPosts(TestCase):
 		self.assertEqual(register_user_response.status_code, 201)
 		self.assertEqual(add_posts_response.status_code, 201)
 		self.assertEqual(list_posts_response.status_code, 200)
-		self.assertEqual(list_posts_response.content.decode(), json.dumps([{
+		self.assertEqual(json.loads(list_posts_response.content), [{
+			"id": 1,
 			"title": "my first post",
 			"content": "my first post content",
 			"author": 1,
-			"tags": [],
-			"categories": []
-		}]))
+			"tags": [tag.id],
+			"categories": [category.id]
+		}])
