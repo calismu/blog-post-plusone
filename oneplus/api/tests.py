@@ -132,6 +132,7 @@ class TestPosts(TestCase):
 			    "tags": [tag.id],
 			    "categories": [category.id]
 			}),
+			content_type='application/json',
 			headers={
 				'Authorization': f'Basic {base64.b64encode(b"omar:omarpass").decode("utf-8")}'
 			}
