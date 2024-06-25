@@ -20,7 +20,7 @@ jobs:
         name: Install pip Dependencies in venv
         run: |
           ls
-          cd api/source/oneplus/
+          cd ./oneplus/
           python -m venv .venv
           source .venv/bin/activate
           python -m pip install -r ../requirements.txt
