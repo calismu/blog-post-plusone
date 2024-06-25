@@ -62,6 +62,12 @@ class TestUsers(TestCase):
 
 
 class TestPosts(TestCase):
+	
+	def setUp(self):
+		self.client = Client()
+		self.register = reverse('user-registeration')
+		self.posts = reverse('post-operations')
+
 
 	def test_list_posts_unauthenticated(self):
 		response = self.client.get(
