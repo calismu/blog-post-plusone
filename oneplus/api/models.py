@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 
 
 class Profile(models.Model):
+	'''Each user has one profile'''
+
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
 	bio = models.TextField()
 	picture_url = models.URLField()
@@ -13,10 +15,14 @@ class Profile(models.Model):
 
 
 class Category(models.Model):
+	'''Category of a post, each post can have more than one category'''
+
 	name = models.CharField(max_length = 50)
 	slug = models.SlugField(max_length = 50, unique = True, null=True)
 
 	def save(self, *args, **kwargs):
+		'''Override save to auto create slug from name if not exists'''
+
 		if not self.slug:
 			self.slug = slugify(self.name)
 			super(Category, self).save(*args, **kwargs)
@@ -26,10 +32,14 @@ class Category(models.Model):
 
 
 class Tag(models.Model):
+	'''Tag of the post, each post can have more than one tag'''
+
 	name = models.CharField(max_length = 50)
 	slug = models.SlugField(max_length = 50, unique = True, null=True)
 
 	def save(self, *args, **kwargs):
+		'''Override save to auto create slug from name if not exists'''
+	
 		if not self.slug:
 			self.slug = slugify(self.name)
 			super(Tag, self).save(*args, **kwargs)
@@ -39,6 +49,8 @@ class Tag(models.Model):
 
 
 class Post(models.Model):
+	'''Posts by user, with multiple tags and categories, and one author'''
+
 	title = models.CharField(max_length=50)
 	content = models.TextField()
 	author = models.OneToOneField(Profile, on_delete=models.SET_NULL, blank=True, null=True)
@@ -52,6 +64,8 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
+	'''Comments by user with one author and one post'''
+	
 	author = models.ForeignKey(Profile, on_delete=models.CASCADE)
 	post = models.ForeignKey(Post, on_delete=models.CASCADE)
 	content = models.CharField(max_length=200)

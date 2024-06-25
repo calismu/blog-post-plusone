@@ -23,6 +23,8 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+
+	# author and post keys to be used with commends, don't include actual model instances
 	author = serializers.PrimaryKeyRelatedField(queryset=Profile.objects.all())
 	post = serializers.PrimaryKeyRelatedField(queryset=Post.objects.all())
 
@@ -31,11 +33,14 @@ class CommentSerializer(serializers.ModelSerializer):
 		fields = ['id', 'content', 'author', 'post']
 
 	def create(self, validated_data):
+		'''Enable comment creation out of validated data from serializer'''
 		comment = Comment.objects.create(**validated_data)
 		return comment
 
 
 class PostSerializer(serializers.ModelSerializer):
+
+	# author, post, and tags keys to be used with commends, don't include actual model instances
 	author = serializers.PrimaryKeyRelatedField(queryset=Profile.objects.all())
 	categories = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), many=True)
 	tags = serializers.PrimaryKeyRelatedField(queryset=Tag.objects.all(), many=True)
@@ -45,6 +50,7 @@ class PostSerializer(serializers.ModelSerializer):
 		fields = ['id', 'title', 'content', 'author', 'categories', 'tags']
 
 	def create(self, validated_data):
+		'''Enable creation of Posts through serializer'''
 		tag_data = validated_data.pop('tags')
 		category_data = validated_data.pop('categories')
 		post = Post.objects.create(**validated_data)
@@ -60,6 +66,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+	# profile key to be used with commends, don't include actual model instances
 	profile = ProfileSerializer(required=True)
 
 	class Meta:
@@ -67,6 +74,7 @@ class UserSerializer(serializers.ModelSerializer):
 		fields = ['id', 'username', 'password', 'profile']
 
 	def create(self, validated_data):
+		'''Enable creation of Users through serializer'''
 		profile_data = validated_data.pop('profile')
 		user = User.objects.create_user(**validated_data)
 		Profile.objects.create(user=user, **profile_data)

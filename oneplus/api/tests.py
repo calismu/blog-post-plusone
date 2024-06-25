@@ -8,6 +8,7 @@ from .models import Category, Tag
 
 
 class TestUsers(TestCase):
+	'''Testomg authentication and registeration functionality'''
 
 	def setUp(self):
 		self.client = Client()
@@ -16,6 +17,8 @@ class TestUsers(TestCase):
 
 
 	def test_register_user(self):
+		'''Test registering a user once'''
+
 		response = self.client.post(
 			self.register,
 			json.dumps({
@@ -32,6 +35,8 @@ class TestUsers(TestCase):
 
 
 	def test_register_user_duplicate(self):
+		'''Test registering the same user twice, duplication error'''
+
 		first_response = self.client.post(
 			self.register,
 			json.dumps({
@@ -64,6 +69,7 @@ class TestUsers(TestCase):
 
 
 class TestPosts(TestCase):
+	'''Test post creation and listing'''
 
 	def setUp(self):
 		self.client = Client()
@@ -72,6 +78,8 @@ class TestPosts(TestCase):
 
 
 	def test_list_posts_unauthenticated(self):
+		'''List all posts with unauthenticated user'''
+
 		response = self.client.get(
 			self.posts,
 		)
@@ -79,6 +87,8 @@ class TestPosts(TestCase):
 
 
 	def test_list_posts_authenticated(self):
+		'''Test list posts with an empty database'''
+
 		register_user_response = self.client.post(
 			self.register,
 			json.dumps({
@@ -107,6 +117,8 @@ class TestPosts(TestCase):
 
 
 	def test_add_posts(self):
+		'''Test add post and list results after addition'''
+
 		category = Category.objects.create(name='comedy')
 		tag = Tag.objects.create(name='mytag')
 

@@ -27,7 +27,9 @@ from .permissions import (
 
 
 class UserView(APIView):
-	permission_classes = []
+	'''serializer operations on django default user instance'''
+
+	permission_classes = [] #anon users can register
 
 	def post(serlf, request):
 
@@ -39,6 +41,7 @@ class UserView(APIView):
 
 
 class CategoryView(APIView):
+	'''Serializer operations on Category model'''
 
 	def get(self, request):
 		categories = Category.objects.all()
@@ -47,6 +50,7 @@ class CategoryView(APIView):
 
 
 class TagView(APIView):
+	'''Serializer operations on Tag model'''
 	
 	def get(self, request):
 		tags = Tag.objects.all()
@@ -55,7 +59,9 @@ class TagView(APIView):
 
 
 class CommentView(APIView):
+	'''Serializer operations on Commend model'''
 
+	#user must have permission (owner of the comment) to edit it
 	permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
 
 	def get(self, request):
@@ -82,7 +88,9 @@ class CommentView(APIView):
 
 
 class PostView(APIView):
+	'''Serializer operations on Post model'''
 
+	#user must have permission (owner of the comment) to edit it
 	permission_classes = [IsAuthenticated, IsAuthorOrReadOnly]
 
 	def get(self, request, post_id=None):
@@ -93,11 +101,13 @@ class PostView(APIView):
 			except Post.DoesNotExist:
 				return Response({'error': 'Post not found'}, status=status.HTTP_404_NOT_FOUND)
 		else:
+			# Search and filter query params
 			tag_name = request.query_params.get('tag')
 			category_name = request.query_params.get('category')
 			post_title = request.query_params.get('title')
 			content_chunk = request.query_params.get('content')
 
+			# filter 'posts' based on query params existance and values
 			posts = Post.objects.all().order_by('id')
 			if tag_name:
 				posts = posts.filter(tags__slug=tag_name)
@@ -108,6 +118,7 @@ class PostView(APIView):
 			if content_chunk:
 				posts = posts.filter(content__contains=content_chunk)
 
+			# instantiate, setup, and run paginator on posts list from model
 			paginator = PageNumberPagination()
 			paginator.page_size = 10			
 			serializer = PostSerializer(paginator.paginate_queryset(posts, request), many=True)
